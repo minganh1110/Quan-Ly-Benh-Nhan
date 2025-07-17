@@ -38,32 +38,32 @@ class KhoaView(tk.Frame):
             self.tree.heading(col, text=col)
         self.tree.pack(fill="both", expand=True, padx=10, pady=5)
         self.tree.bind("<<TreeviewSelect>>", self.on_select)
-
+    # Xử lý sự kiện chọn khoa
     def get_form_data(self):
         return {
             "ten_khoa": self.ten_khoa_entry.get()
         }
-
+    # Set dữ liệu vào form
     def set_form_data(self, data):
         self.ten_khoa_entry.delete(0, tk.END)
         self.ten_khoa_entry.insert(0, data.get("ten_khoa", ""))
-
+    # Clear form
     def clear_form(self):
         self.ten_khoa_entry.delete(0, tk.END)
-
+    # Hiển thị danh sách khoa
     def show_khoa(self, ds_khoa):
         for i in self.tree.get_children():
             self.tree.delete(i)
         for k in ds_khoa:
             self.tree.insert("", "end", values=(k["khoa_id"], k["ten_khoa"]))
-
+    # Lấy ID khoa đã chọn
     def get_selected_khoa_id(self):
         selected = self.tree.selection()
         if not selected:
             return None
         item = self.tree.item(selected[0])
         return item["values"][0]
-
+    # Xác nhận xóa khoa
     def on_select(self, event):
         selected = self.tree.selection()
         if not selected:
@@ -72,6 +72,6 @@ class KhoaView(tk.Frame):
         vals = item["values"]
         self.ten_khoa_entry.delete(0, tk.END)
         self.ten_khoa_entry.insert(0, vals[1])
-
+    # Xác nhận xóa khoa
     def confirm_delete(self, khoa_id):
         return messagebox.askyesno("Xác nhận", f"Bạn có chắc chắn muốn xóa khoa ID {khoa_id}?")

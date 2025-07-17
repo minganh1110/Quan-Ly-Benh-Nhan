@@ -9,7 +9,6 @@ class PatientView(tk.Frame):
         self.controller = controller
         self.pack(fill="both", expand=True)
         # thanh tìm kiếm 
-         # Thanh tìm kiếm
         search_frame = tk.Frame(self)
         search_frame.pack(fill="x", padx=10, pady=5)
         tk.Label(search_frame, text="Tìm kiếm:").pack(side="left")
@@ -38,12 +37,18 @@ class PatientView(tk.Frame):
     # Lấy dữ liệu từ form
     def get_form_data(self):
         return self.form.get_data()
+    
+    
     # Set dữ liệu vào form
     def set_form_data(self, data):
         self.form.set_data(data)
+
+
     # Clear form
     def clear_form(self):
         self.form.clear()
+
+
     # Hiển thị danh sách bệnh nhân
     def show_patients(self, patients):
         self.table.show_patients(patients)

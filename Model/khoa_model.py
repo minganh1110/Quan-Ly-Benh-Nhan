@@ -54,7 +54,7 @@ class KhoaModel:
             print("Loi khi tim khoa theo ten:", e)
             return None
     # Cập nhật thông tin khoa
-    def update_khoa(self, khoa: khoa_entity) -> bool:
+    def update_khoa(self, khoa_id, ten_khoa) -> bool:
         if self.connection is None:
             print("Khong the ket noi co so du lieu.")
             return False
@@ -65,7 +65,7 @@ class KhoaModel:
                 SET ten_khoa = %s
                 WHERE khoa_id = %s
             """
-            cursor.execute(query, (khoa.ten_khoa, khoa.khoa_id))
+            cursor.execute(query, (ten_khoa, khoa_id))
             self.connection.commit()
             cursor.close()
             return True
