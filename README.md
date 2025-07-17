@@ -1,4 +1,19 @@
 # Quản Lý Bệnh Nhân (QLBN)
+## Cấu trúc hướng đối tượng
+
+Dự án được thiết kế theo mô hình hướng đối tượng (OOP):
+
+- **Class**: Mỗi chức năng chính đều được đóng gói thành các class riêng biệt như `PatientController`, `PatientModel`, `PatientView`, `KhoaController`, `KhoaModel`, `KhoaView`, `PatientTable`.
+- **Thuộc tính và phương thức**: Các class có thuộc tính (biến thành viên) và phương thức (hàm xử lý) riêng, ví dụ: `show_patients`, `get_selected_id`, `add_patient`, `update_patient`.
+- **Đóng gói**: Mỗi class chỉ quản lý dữ liệu và logic liên quan, giúp mã nguồn dễ bảo trì và mở rộng.
+- **Kế thừa**: Các class giao diện kế thừa từ `tk.Frame` của Tkinter để tận dụng các chức năng giao diện sẵn có.
+- **Trừu tượng**: Controller chỉ gọi các hàm xử lý mà không cần biết chi tiết bên trong, các handler tách biệt logic nghiệp vụ.
+- **Đa hình**: Các phương thức có thể được ghi đè hoặc mở rộng khi cần.
+
+Ví dụ về hướng đối tượng trong file `View/patient_table.py`:
+- Class `PatientTable` kế thừa từ `tk.Frame`, quản lý bảng hiển thị bệnh nhân.
+- Các phương thức như `show_patients`, `get_selected_id`, `get_selected_row_values` giúp thao tác với dữ liệu bảng một cách trực quan và đóng gói.
+
 ## Cấu trúc thư mục
 ```
 QLBN/
@@ -55,5 +70,5 @@ QLBN/
    ```
    - Chọn chức năng quản lý khoa và quản lý bệnh nhân 
    
-
+  
 
