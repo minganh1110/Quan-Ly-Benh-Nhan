@@ -36,6 +36,8 @@ QLBN/
 ├── main.py                        # Form chính, chọn chức năng quản lý
 └── README.md                      # Tài liệu hướng dẫn
 ```
+## Mô tả cấu trúc CSDL quan hệ 
+<img width="909" height="670" alt="image" src="https://github.com/user-attachments/assets/326ba3ec-63ba-4e40-a859-e96fca18d988" />
 
 ## Chức năng chính
 
