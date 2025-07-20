@@ -18,8 +18,8 @@ class PatientModel:
             cursor = self.connection.cursor()
             query = """
                 INSERT INTO ThongTinBenhNhan
-                (ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, khoa_id, ngay_nhap_vien, ngay_ra_vien, chan_doan)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                (ho_ten, ngay_sinh, gioi_tinh, dia_chi, so_dien_thoai, khoa_id, ngay_nhap_vien, ngay_ra_vien, chan_doan, bac_si_id, phong_id, giuong_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
             cursor.execute(query, (
                 patient.name,
@@ -30,7 +30,10 @@ class PatientModel:
                 patient.khoa_id,
                 patient.ngaynhapvien,
                 patient.ngayravien,
-                patient.chuandoan
+                patient.chuandoan,
+                patient.bac_si_id,
+                patient.phong_id,
+                patient.giuong_id
             ))
             self.connection.commit()
             cursor.close()
@@ -57,7 +60,10 @@ class PatientModel:
                     khoa_id = %s,
                     ngay_nhap_vien = %s,
                     ngay_ra_vien = %s,
-                    chan_doan = %s
+                    chan_doan = %s,
+                    bac_si_id = %s,
+                    phong_id = %s,
+                    giuong_id = %s
                 WHERE benhnhan_id = %s
             """
             cursor.execute(query, (
@@ -70,6 +76,9 @@ class PatientModel:
                 patient.ngaynhapvien,
                 patient.ngayravien,
                 patient.chuandoan,
+                patient.bac_si_id,
+                patient.phong_id,
+                patient.giuong_id,
                 patient.benhnhan_id
             ))
             self.connection.commit()
@@ -96,6 +105,7 @@ class PatientModel:
         except Exception as e:
             print("Loi khi lay danh sach benh nhan:", e)
             return []
+
     def get_patient_by_id(self, patient_id: int) -> Patient:
         if self.connection is None:
             print("Khong the ket noi den co so du lieu.")
@@ -118,7 +128,10 @@ class PatientModel:
                     khoa_id=result.get("khoa_id"),
                     ngaynhapvien=result.get("ngay_nhap_vien"),
                     ngayravien=result.get("ngay_ra_vien"),
-                    chuandoan=result.get("chan_doan")
+                    chuandoan=result.get("chan_doan"),
+                    bac_si_id=result.get("bac_si_id"),
+                    phong_id=result.get("phong_id"),
+                    giuong_id=result.get("giuong_id")
                 )
             else:
                 return None
@@ -126,9 +139,7 @@ class PatientModel:
         except Exception as e:
             print("Loi khi lay benh nhan theo ID:", e)
             return
-        
-
-        
+ 
     def delete_patient(self, patient_id: int) -> bool:
         if self.connection is None:
             print("Khong the ket noi den co so du lieu.")

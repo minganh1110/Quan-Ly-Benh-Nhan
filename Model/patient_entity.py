@@ -15,7 +15,10 @@ class Patient(Person):
         khoa_id: Optional[int] = None,
         ngaynhapvien: Optional[str] = None,
         ngayravien: Optional[str] = None,
-        chuandoan: Optional[str] = None
+        chuandoan: Optional[str] = None,
+        bac_si_id: Optional[int] = None,
+        phong_id: Optional[int] = None,
+        giuong_id: Optional[int] = None
     ):
         super().__init__(name, gender, ngaysinh, diachi, sdt)
         self.benhnhan_id = benhnhan_id
@@ -23,3 +26,6 @@ class Patient(Person):
         self.ngaynhapvien = ngaynhapvien
         self.ngayravien = ngayravien
         self.chuandoan = chuandoan
+        self.bac_si_id = bac_si_id
+        self.phong_id = phong_id
+        self.giuong_id = giuong_id

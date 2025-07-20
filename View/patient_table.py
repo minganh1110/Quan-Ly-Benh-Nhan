@@ -7,14 +7,14 @@ class PatientTable(tk.Frame):
 
         columns = (
             "ID", "Họ tên", "Giới tính", "Ngày sinh", "Địa chỉ", "SĐT",
-            "Nhập viện", "Ra viện", "Chẩn đoán", "Khoa"
+            "Nhập viện", "Ra viện", "Chẩn đoán", "Khoa", "Bác sĩ ID", "Phòng ID", "Giường ID"
         )
 
         # Treeview
         self.tree = ttk.Treeview(self, columns=columns, show="headings")
         for col in columns:
             self.tree.heading(col, text=col)
-            self.tree.column(col, width=100, anchor="w")  # Cố định chiều rộng ban đầu
+            self.tree.column(col, width=100, anchor="w")
 
         # Scrollbar dọc
         vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
@@ -41,9 +41,21 @@ class PatientTable(tk.Frame):
             self.tree.delete(i)
         for p in patients:
             self.tree.insert("", "end", values=(
-                p["benhnhan_id"], p["ho_ten"], p["gioi_tinh"], p["ngay_sinh"], p["dia_chi"], p["so_dien_thoai"],
-                p["ngay_nhap_vien"], p["ngay_ra_vien"], p["chan_doan"], p["khoa_id"]
+                p.get("benhnhan_id"),
+                p.get("ho_ten"),
+                p.get("gioi_tinh"),
+                p.get("ngay_sinh"),
+                p.get("dia_chi"),
+                p.get("so_dien_thoai"),
+                p.get("ngay_nhap_vien"),
+                p.get("ngay_ra_vien"),
+                p.get("chan_doan"),
+                p.get("khoa_id"),
+                p.get("bac_si_id"),
+                p.get("phong_id"),
+                p.get("giuong_id")
             ))
+
     # Lấy ID bệnh nhân đã chọn
     def get_selected_id(self):
         selected = self.tree.selection()
@@ -51,7 +63,7 @@ class PatientTable(tk.Frame):
             return None
         item = self.tree.item(selected[0])
         return item["values"][0]
-    
+
     # Lấy giá trị của hàng đã chọn
     def get_selected_row_values(self):
         selected = self.tree.selection()

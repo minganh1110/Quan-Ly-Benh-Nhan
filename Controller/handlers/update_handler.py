@@ -11,7 +11,7 @@ def handle_update_patient(view, model, khoa_model):
     khoa_list = khoa_model.get_all_khoa()
     khoa_id = None
     for k in khoa_list:
-        if str(k['khoa_id']) == data['khoa'] or k['ten_khoa'] == data['khoa']:
+        if (k['khoa_id']) == data['khoa'] or k['ten_khoa'] == data['khoa']:
             khoa_id = k['khoa_id']
             break
 
@@ -25,7 +25,10 @@ def handle_update_patient(view, model, khoa_model):
         ngayravien=data['ngayravien'],
         chuandoan=data['chuandoan'],
         khoa_id=khoa_id,
-        benhnhan_id=patient_id
+        benhnhan_id=patient_id,
+        bac_si_id=data['bac_si_id'],
+        phong_id=data['phong_id'],
+        giuong_id=data['giuong_id']
     )
 
     if model.update_patient(patient):

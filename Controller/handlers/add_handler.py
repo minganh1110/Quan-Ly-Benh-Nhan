@@ -32,7 +32,11 @@ def handle_add_patient(view, model, khoa_model):
         ngayravien=data['ngayravien'],
         chuandoan=data['chuandoan'],
         khoa_id=khoa_id,
-        benhnhan_id=None
+        benhnhan_id=None,
+        bac_si_id=data['bac_si_id'],
+        phong_id=data['phong_id'],
+        giuong_id=data['giuong_id']
+
     )
 
     if model.add_patient(patient):

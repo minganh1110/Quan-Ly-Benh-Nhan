@@ -59,10 +59,14 @@ class PatientView(tk.Frame):
     def on_select(self, event):
         row = self.table.get_selected_row_values()
         if row:
-            keys = ["name", "gender", "ngaysinh", "diachi", "sdt", "ngaynhapvien", "ngayravien", "chuandoan", "khoa"]
+            keys = [
+                "name", "gender", "ngaysinh", "diachi", "sdt",
+                "ngaynhapvien", "ngayravien", "chuandoan", "khoa",
+                "bac_si_id", "phong_id", "giuong_id"
+            ]
             data = {k: row[i+1] for i, k in enumerate(keys)}  # ID là row[0]
             self.set_form_data(data)
-            
+                
     # Xác nhận xóa bệnh nhân
     def confirm_delete(self, patient_id):
         return messagebox.askyesno("Xác nhận", f"Bạn có chắc chắn muốn xóa bệnh nhân ID {patient_id}?")
