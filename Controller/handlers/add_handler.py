@@ -3,7 +3,7 @@ from Model.patient_entity import Patient
 
 def handle_add_patient(view, model, khoa_model):
     data = view.get_form_data()
-
+    
     # Kiểm tra người dùng có chọn khoa không
     if not data['khoa']:
         tk.messagebox.showerror("Lỗi", "Vui lòng chọn khoa trước khi thêm!")

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Model.khoa_model import KhoaModel
 from Model.bac_si_model import DoctorModel
-
+from Model.room_model import RoomModel
 class PatientForm(tk.LabelFrame):
     def __init__(self, master):
         super().__init__(master, text="Thông tin bệnh nhân")
@@ -11,6 +11,9 @@ class PatientForm(tk.LabelFrame):
         self.khoa_map_reverse = {}  # ánh xạ id → tên khoa
         self.doctor_map = {}        # ánh xạ tên bác sĩ → id
         self.doctor_map_reverse = {}# ánh xạ id → tên bác sĩ
+        self.room_map = {}           # tên phòng → id
+        self.room_map_reverse = {}   # id → tên phòng
+
         self.khoa_cb = None
         self.doctor_cb = None
         self.create_form()
@@ -80,22 +83,85 @@ class PatientForm(tk.LabelFrame):
         stay_frame = tk.LabelFrame(self, text="Thông tin chỗ ở")
         stay_frame.grid(row=0, column=2, sticky="n", padx=10, pady=5)
 
-        stay_fields = [
-            ("Phòng ID", "phong_id"),
-            ("Giường ID", "giuong_id"),
-        ]
 
-        for i, (label, key) in enumerate(stay_fields):
-            tk.Label(stay_frame, text=label).grid(row=i, column=0, sticky="w", padx=5, pady=2)
-            entry = tk.Entry(stay_frame)
-            entry.grid(row=i, column=1, padx=5, pady=2)
-            self.entries[key] = entry
+        # Combobox Loại phòng
+        tk.Label(stay_frame, text="Loại phòng").grid(row=1, column=0, sticky="w", padx=5, pady=2)
+        self.room_type_cb = ttk.Combobox(stay_frame, values=["VIP", "Normal", "Hồi sức"], state="readonly")
+        self.room_type_cb.grid(row=1, column=1, padx=5, pady=2)
+        self.room_type_cb.bind("<<ComboboxSelected>>", self.on_loai_phong_selected)
+        self.entries["loai_phong"] = self.room_type_cb
+
+
+        # Combobox Phòng
+        tk.Label(stay_frame, text="Phòng").grid(row=0, column=0, sticky="w", padx=5, pady=2)
+        self.room_cb = ttk.Combobox(stay_frame, state="readonly")
+        self.room_cb.grid(row=0, column=1, padx=5, pady=2)
+        self.room_cb.bind("<<ComboboxSelected>>", self.on_phong_selected)
+        self.entries["phong_id"] = self.room_cb  # vẫn dùng key là phong_id để get_data đồng nhất
+
+        # Entry Giường ID giữ nguyên
+        tk.Label(stay_frame, text="Giường ID").grid(row=2, column=0, sticky="w", padx=5, pady=2)
+        self.giuong_cb = ttk.Combobox(stay_frame, state="readonly")
+        self.giuong_cb.grid(row=2, column=1, padx=5, pady=2)
+        self.entries["giuong_id"] = self.giuong_cb  # key giữ nguyên để dễ dùng
+
 
     # Sự kiện chọn khoa
     def on_khoa_selected(self, event):
         ten_khoa = self.entries["khoa"].get()
         khoa_id = self.khoa_map.get(ten_khoa)
         self.load_doctors_by_khoa(khoa_id)
+        self.load_rooms_by_khoa(khoa_id)
+
+    # Sự kiện chọn loại phòng
+    def on_loai_phong_selected(self, event):
+        ten_khoa = self.entries["khoa"].get()
+        loai_phong = self.entries["loai_phong"].get()
+
+        if not ten_khoa or not loai_phong:
+            return  # Không có khoa hoặc loại phòng thì không làm gì
+
+        khoa_id = self.khoa_map.get(ten_khoa)
+        if khoa_id is None:
+            return
+
+        room_model = RoomModel()
+        ds_phong = room_model.get_rooms_by_khoa_and_loai(khoa_id, loai_phong)
+        print(">>> Danh sách phòng theo khoa và loại:", ds_phong)
+
+        self.room_map.clear()
+        self.room_map_reverse.clear()
+        phong_names = []
+
+        for p in ds_phong:
+            so_phong = p["so_phong"]
+            phong_id = p["id"]
+            self.room_map[so_phong] = phong_id
+            self.room_map_reverse[phong_id] = so_phong
+            phong_names.append(so_phong)
+
+        self.room_cb['values'] = phong_names
+        self.room_cb.set("")
+    # Sự kiện chọn phòng
+    def on_phong_selected(self, event):
+        so_phong = self.entries["phong_id"].get()
+        print(">>> Sự kiện chọn phòng:", so_phong)
+        if not so_phong:
+            return
+        sophongint = int(so_phong)  # Chuyển đổi sang int nếu cần
+        phong_id = self.room_map.get(sophongint)
+        print(">>> ID phòng đã chọn:", phong_id)
+        if not phong_id:
+            return
+
+        room_model = RoomModel()
+        ds_giuong = room_model.get_giuong_by_phong_id(phong_id)
+        print(">>> Danh sách giường theo phòng:", ds_giuong)
+        giuong_values = [str(gid['id']) for gid in ds_giuong]
+        self.giuong_cb['values'] = giuong_values
+        self.giuong_cb.set(giuong_values[0] if giuong_values else "")
+
+
 
     # Load danh sách bác sĩ theo khoa
     def load_doctors_by_khoa(self, khoa_id):
@@ -115,6 +181,24 @@ class PatientForm(tk.LabelFrame):
 
         self.doctor_cb['values'] = bac_si_names
         self.doctor_cb.set("")
+    # Load danh sách phòng theo khoa
+    def load_rooms_by_khoa(self, khoa_id):
+        room_model = RoomModel()
+        ds_phong = room_model.get_room_by_khoa_id(khoa_id)
+        print(">>> Danh sách phòng lấy theo khoa:", ds_phong)
+        self.room_map.clear()
+        self.room_map_reverse.clear()
+        phong_names = []
+
+        for p in ds_phong:
+            sophong = p["so_phong"]
+            phong_id = p["id"]
+            self.room_map[sophong] = phong_id
+            self.room_map_reverse[phong_id] = sophong
+            phong_names.append(sophong)
+
+        self.room_cb['values'] = phong_names
+        self.room_cb.set("")
 
     # Lấy dữ liệu từ form
     def get_data(self):
@@ -125,11 +209,11 @@ class PatientForm(tk.LabelFrame):
         ten_bs = data.get("bac_si_id")
         data["bac_si_id"] = self.doctor_map.get(ten_bs)
 
-        for key in ["phong_id", "giuong_id"]:
-            try:
-                data[key] = int(data[key]) if data[key] else None
-            except ValueError:
-                data[key] = None
+        sophong = data.get("phong_id")
+        so_phongint= int(sophong)
+        data["phong_id"] = self.room_map.get(so_phongint)
+        
+        
         return data
 
     # Gán dữ liệu vào form
@@ -141,9 +225,20 @@ class PatientForm(tk.LabelFrame):
                 ten_khoa = self.khoa_map_reverse.get(v, "")
                 self.entries[k].set(ten_khoa)
                 self.load_doctors_by_khoa(v)  # Load bác sĩ tương ứng với khoa
+                self.load_rooms_by_khoa(v)
             elif k == "bac_si_id":
                 ten_bs = self.doctor_map_reverse.get(v, "")
                 self.entries[k].set(ten_bs)
+            elif k == "phong_id":
+                so_phong = self.room_map_reverse.get(v, "")
+                self.entries[k].set(so_phong)
+
+                if v:
+                    room_model = RoomModel()
+                    loai_phong = room_model.get_loai_phong_by_id(v)
+                    self.entries["loai_phong"].set(loai_phong)
+            elif k == "giuong_id":
+                self.entries[k].set(str(v))
             else:
                 self.entries[k].delete(0, tk.END)
                 self.entries[k].insert(0, str(v) if v is not None else "")
@@ -153,7 +248,7 @@ class PatientForm(tk.LabelFrame):
         for k, e in self.entries.items():
             if isinstance(e, ttk.Combobox):
                 e.set("")
-                if k == "bac_si_id":
+                if k in ["bac_si_id","phong_id"]:
                     e['values'] = []
             else:
                 e.delete(0, tk.END)
