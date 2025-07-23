@@ -6,14 +6,14 @@ class RoomModel:
     def __init__(self):
         self.connection = get_connection()
     
-    def add_room(self, so_phong: str, loai_phong: str, khoa_id: int) -> bool:
+    def add_room(self, so_phong: str, loai_phong: str, khoa_id: int, so_giuong:str) -> bool:
         if self.connection is None:
             print("Khong the ket noi co so du lieu.")
             return False
         try:
             cursor = self.connection.cursor()
-            query = "INSERT INTO phong (so_phong, loai_phong, khoa_id) VALUES (%s, %s, %s)"
-            cursor.execute(query, (so_phong, loai_phong, khoa_id))
+            query = "INSERT INTO phong (so_phong, loai_phong, khoa_id, so_giuong) VALUES (%s, %s, %s, %s)"
+            cursor.execute(query, (so_phong, loai_phong, khoa_id,so_giuong))
             self.connection.commit()
             cursor.close()
             return True
@@ -56,7 +56,7 @@ class RoomModel:
             return []
         try:
             cursor = self.connection.cursor(dictionary=True)
-            query = "SELECT id, so_phong FROM phong WHERE khoa_id = %s"
+            query = "SELECT id, so_phong , loai_phong, so_giuong, khoa_id FROM phong WHERE khoa_id = %s"
             cursor.execute(query, (khoa_id,))
             results = cursor.fetchall()
             cursor.close()
@@ -64,14 +64,14 @@ class RoomModel:
         except Exception as e:
             print("Loi khi lay danh sach phong theo khoa:", e)
             return []
-    def update_room(self, id: int, so_phong: str, loai_phong: str, khoa_id: int) -> bool:
+    def update_room(self, id: int, so_phong: str, loai_phong: str, khoa_id: int, so_giuong: str) -> bool:
         if self.connection is None:
             print("Khong the ket noi co so du lieu.")
             return False
         try:
             cursor = self.connection.cursor()
-            query = "UPDATE Room SET so_phong = %s, loai_phong = %s, khoa_id = %s WHERE id = %s"
-            cursor.execute(query, (so_phong, loai_phong, khoa_id, id))
+            query = "UPDATE phong SET so_phong = %s, loai_phong = %s, khoa_id = %s, so_giuong = %s WHERE id = %s "
+            cursor.execute(query, (so_phong, loai_phong, khoa_id,so_giuong, id))
             self.connection.commit()
             cursor.close()
             return True

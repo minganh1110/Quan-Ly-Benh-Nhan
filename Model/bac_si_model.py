@@ -76,7 +76,7 @@ class DoctorModel:
             query = """
                 UPDATE thongtinbacsi
                 SET name = %s, gender = %s, ngaysinh = %s, diachi = %s, sdt = %s, khoa_id = %s
-                WHERE bac_si_id = %s
+                WHERE id = %s
             """
             cursor.execute(query, (
                 doctor.name,
