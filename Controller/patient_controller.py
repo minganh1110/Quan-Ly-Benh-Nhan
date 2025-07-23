@@ -24,6 +24,7 @@ class PatientController:
     # Tải danh sách bệnh nhân từ model và hiển thị lên view
     def load_patients(self):
         ds = self.model.get_all_patients()
+        print(ds)
         self.view.show_patients(ds)
         self.view.clear_form()
 

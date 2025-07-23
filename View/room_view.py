@@ -55,7 +55,7 @@ class RoomView(tk.Frame):
         tk.Button(btn_frame, text="Cập nhật", command=self.on_update).pack(side="left")
         tk.Button(btn_frame, text="Xóa", command=self.on_delete).pack(side="left")
         tk.Button(btn_frame, text="Làm mới", command=self.clear_form).pack(side="left")
-
+        tk.Button(btn_frame, text="Thêm giường", command=self.on_add_bed).pack(side="left")
         # Bảng danh sách phòng
         self.tree = ttk.Treeview(self, columns=("ID", "Số phòng", "Loại phòng", "Số giường", "Khoa"), show="headings")
         for col in self.tree["columns"]:
@@ -152,7 +152,12 @@ class RoomView(tk.Frame):
         else:
             khoa_id = self.khoa_map.get(ten_khoa)
             self.controller.load_rooms(khoa_id=khoa_id)
-
+    def on_add_bed(self):
+        if not self.selected_room_id:
+            self.show_message("Vui lòng chọn phòng để thêm giường!", error=True)
+            return
+        # Gọi controller để thêm 1 giường
+        self.controller.add_bed_to_room(self.selected_room_id, 1)
     def show_message(self, msg, error=False):
         if error:
             messagebox.showerror("Lỗi", msg)

@@ -122,3 +122,33 @@ class RoomModel:
         except Exception as e:
             print("Loi khi lay giuong theo phong_id:", e)
             return []
+
+    def count_beds_in_room(self, room_id: int) -> int:
+        if self.connection is None:
+            print("Khong the ket noi co so du lieu.")
+            return 0
+        try:
+            cursor = self.connection.cursor()
+            query = "SELECT COUNT(*) FROM giuong WHERE phong_id = %s"
+            cursor.execute(query, (room_id,))
+            count = cursor.fetchone()[0]
+            cursor.close()
+            return count
+        except Exception as e:
+            print("Loi khi dem so giuong trong phong:", e)
+            return 0
+    
+    def add_bed_to_room(self, phong_id: int) -> bool:
+        if self.connection is None:
+            print("Khong the ket noi co so du lieu.")
+            return False
+        try:
+            cursor = self.connection.cursor()
+            query = "INSERT INTO giuong (phong_id) VALUES (%s)"
+            cursor.execute(query, (phong_id,))
+            self.connection.commit()
+            cursor.close()
+            return True
+        except Exception as e:
+            print("Loi khi them giuong vao phong:", e)
+            return False
