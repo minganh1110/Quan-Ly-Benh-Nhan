@@ -58,7 +58,7 @@ class DoctorModel:
 
         try:
             cursor = self.connection.cursor(dictionary=True)
-            query = "SELECT id, name FROM thongtinbacsi WHERE khoa_id = %s"
+            query = "SELECT id, name, gender, ngaysinh, diachi, sdt, khoa_id FROM thongtinbacsi WHERE khoa_id = %s"
             cursor.execute(query, (khoa_id,))
             result = cursor.fetchall()
             cursor.close()
@@ -99,7 +99,7 @@ class DoctorModel:
             return False
         try:
             cursor = self.connection.cursor()
-            query = "DELETE FROM thongtinbacsi WHERE bac_si_id = %s"
+            query = "DELETE FROM thongtinbacsi WHERE id = %s"
             cursor.execute(query, (doctor_id,))
             self.connection.commit()
             cursor.close()
