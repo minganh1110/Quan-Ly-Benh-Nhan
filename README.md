@@ -47,9 +47,18 @@ QLBN/
 
 - Quản lý khoa: 
   - Thêm, sửa, xóa, tìm kiếm, hiển thị danh sách khoa.
-
+- Quản lý Bác sĩ :
+  - Thêm, sửa , xóa , tìm kiếm , lọc bác sĩ theo từng khoa
+- Quản lý Phòng :
+  - Thêm, sửa , xóa , phòng ,tìm kiếm phòng , lọc phòng theo từng khoa
+- Quản lý Giường :
+  - Thêm giường không được vượt quá số giường tối đa trong 1 phòng
+  - khi thêm bệnh nhân check xem giường bệnh đấy có người nằm chưa
+  - nếu bệnh nhân đã có ngày ra viện thì được sử dụng giường đấy.
 - Tìm kiếm:
   - Tìm kiếm bệnh nhân hoặc khoa theo từ khóa.
+  - Tìm kiếm bác sĩ theo tên
+  - Tìm kiếm phòng theo số phòng 
 
 - Giao diện:
   - Giao diện trực quan với Tkinter, sử dụng bảng (Treeview) để hiển thị danh sách.
